@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para o Meu Amor ❤️</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Great+Vibes&family=Montserrat&display=swap" rel="stylesheet">
+<style>
+
+body{
+    font-family:'Montserrat',sans-serif;
+    margin:0;
+    position:relative;
+    transition: background 1.5s ease;
+    background:url('/static/fundo.webp') center/cover fixed;
+
+    overflow-x:hidden;
+    overflow-y:auto;
+    min-height:100vh;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+
+    width:100%;
+}
+
+
+
+
+
+/* ===== CORAÇÕES FLUTUANTES ===== */
+#hearts-container{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:hidden;
+}
+.floating-heart{
+  position:absolute;
+  width:12px;
+  height:12px;
+  background:#ff4d6d;
+  transform:rotate(-45deg);
+  animation:float linear infinite;
+}
+.floating-heart:before,.floating-heart:after{
+  content:"";
+  position:absolute;
+  width:12px;
+  height:12px;
+  background:#ff4d6d;
+  border-radius:50%;
+}
+.floating-heart:before{top:-6px;}
+.floating-heart:after{left:6px;}
+@keyframes float{
+  0%{transform:translateY(0) rotate(-45deg); opacity:0;}
+  50%{opacity:1;}
+  100%{transform:translateY(-120vh) rotate(-45deg); opacity:0;}
+}
+
+/* ===== CONFETES E PETALAS ===== */
+.confetti, .petala{
+  position:fixed;
+  width:8px;
+  height:8px;
+  top:0;
+  z-index:1000;
+  pointer-events:none;
+}
+.confetti{ background:linear-gradient(45deg, #ff4d6d, #ffadad); animation:fallConfetti 3s linear forwards;}
+.petala{ background:rgba(255,182,193,0.7); border-radius:50%; animation:fallPetala linear infinite; width:12px; height:12px; }
+@keyframes fallConfetti{
+  0%{transform:translateY(0) rotate(0deg); opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg); opacity:0;}
+}
+@keyframes fallPetala{
+  0%{transform:translateY(0) rotate(0deg); opacity:1;}
+  100%{transform:translateY(120vh) rotate(360deg); opacity:0;}
+}
+.home-screen{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start; /* <<< ESSENCIAL */
+    padding:40px 20px;
+    position:relative;
+}
+
+h1{
+    font-family:'Great Vibes',cursive;
+    font-size:4rem;
+    color:#ffadad;
+}
+.lead{
+    font-family:'Dancing Script',cursive;
+    font-size:1.3rem;
+    color:#ff4d6d;
+}
+.foto-amor{
+    width:120px;height:120px;border-radius:50%;
+    object-fit:cover;border:3px solid #ff4d6d;
+    margin-bottom:10px;
+}
+
+/* ===== BOTÃO BRILHANTE ===== */
+.btn-custom{
+    margin-top:25px;
+    background:#ff4d6d;
+    color:#fff;
+    padding:10px 22px;
+    border-radius:50px;
+    font-weight:bold;
+    box-shadow:0 0 20px #ff4d6d;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+@keyframes glow{
+  0%{box-shadow:0 0 10px #ff4d6d;}
+  100%{box-shadow:0 0 30px #ffadad;}
+}
+
+/* ===== FADE-IN ELEMENTS ===== */
+.fade-in{ opacity:0; transform:translateY(15px); animation:fadeInUp 1s forwards;}
+.fade-in.delay1{animation-delay:0.3s;}
+.fade-in.delay2{animation-delay:0.6s;}
+.fade-in.delay3{animation-delay:0.9s;}
+@keyframes fadeInUp{ 0%{opacity:0; transform:translateY(15px);} 100%{opacity:1; transform:translateY(0);} }
+
+/* ===== SOBRE A GENTE ===== */
+.sobre-container{ margin-top:15px; border-radius:12px; background:
+  linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+  url('/static/fundo_sobre.jpg') center/cover no-repeat;
+ overflow:hidden; max-height:0; opacity:0; transition:max-height .6s ease, opacity .4s ease;}
+
+.sobre-container.open{ max-height:500px; opacity:1;}
+.sobre-content{ padding:12px; animation:fadeUp 1.2s ease forwards;}
+.sobre-content h4{ font-family:'Great Vibes',cursive; font-size:1.8rem; color:#ffadad; margin-bottom:8px; text-align:center; }
+.sobre-content p{ font-family:'Dancing Script',cursive; font-size:1.1rem; line-height:1.5; color:#f2f2f2; text-align:center; animation:softBreath 6s ease-in-out infinite;}
+.sobre-toggle{ margin-top:12px; width:100%; text-align:center; font-family:'Dancing Script',cursive; font-size:1.2rem; color:#ffadad; cursor:pointer; user-select:none; }
+
+/* ===== LIGHTBOX ===== */
+#lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+  cursor:pointer;
+}
+#lightbox img{
+  max-width:90%;
+  max-height:80%;
+  border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.7);
+}
+
+/* ===== ÁLBUM DENTRO DE SOBRE A GENTE ===== */
+.album{
+  margin-top:20px;
+  display:flex;
+  gap:14px;
+
+  overflow-x:auto;
+  padding:10px 8px 20px;
+
+  scroll-behavior:smooth;
+  scroll-snap-type:x mandatory;
+
+  -ms-overflow-style:none;      /* tira barra no Edge */
+  scrollbar-width:none;         /* tira barra no Firefox */
+}
+
+.album::-webkit-scrollbar{
+  display:none;                 /* tira barra no Chrome */
+}
+
+.photo-wrapper{
+  position:relative;
+  flex:0 0 auto;
+  scroll-snap-align:center;
+}
+
+.photo-wrapper img{
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+  cursor:pointer;
+  opacity:0.7;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.4s;
+}
+
+
+.photo-wrapper img:hover{
+  opacity:1;
+  transform: scale(1.12) rotate(var(--rotation,0deg));
+  box-shadow:0 12px 25px rgba(255,77,109,0.8);
+}
+
+.photo-wrapper img:hover{
+  transform: scale(1.1) rotate(var(--rotation,0deg));
+  box-shadow:0 8px 20px rgba(255,77,109,0.7);
+}
+.photo-wrapper img::after{
+  content:"";
+  position:absolute;
+  top:0; left:-75%;
+  width:50%; height:100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+}
+.photo-wrapper img:hover::after{ animation: shine 1s forwards; }
+.caption{
+  pointer-events:none;
+  position:absolute;
+  bottom:2px; left:50%;
+  transform: translateX(-50%);
+  background:rgba(255,77,109,0.7);
+  color:white;
+  padding:2px 6px;
+  border-radius:4px;
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.photo-wrapper:hover .caption{ opacity:1; }
+@keyframes fadeUp{ 0%{opacity:0; transform: translateY(20px) rotate(var(--rotation,0deg));} 100%{opacity:1; transform:translateY(0) rotate(var(--rotation,0deg));} }
+@keyframes shine{ 0%{left:-75%;} 100%{left:125%;} }
+</style>
+</head>
+<body>
+<div id="hearts-container"></div>
+
+<div class="home-screen">
+  <img src="/static/foto_ana.jpg" class="foto-amor fade-in delay1">
+  <h1 class="fade-in delay2">Eu te amo, Ana</h1>
+  <p class="lead fade-in delay3">Você é a melhor parte dos meus dias.</p>
+
+  <div id="contador" class="grid grid-cols-3 gap-3 text-center text-white fade-in delay3">
+    <div><span id="anos_player">0</span><div>Anos</div></div>
+    <div><span id="meses_player">0</span><div>Meses</div></div>
+    <div><span id="dias_player">0</span><div>Dias</div></div>
+    <div><span id="horas_player">0</span><div>Horas</div></div>
+    <div><span id="minutos_player">0</span><div>Minutos</div></div>
+    <div><span id="segundos_player">0</span><div>Segundos</div></div>
+  </div>
+
+  <button class="btn-custom fade-in delay3" id="abrirSurpresa">Clique para uma surpresa</button>
+
+  <div class="mt-4 text-white text-center fade-in delay3">
+    <h2 class="text-xl font-bold">Contagem regressiva para nosso encontro</h2>
+    <div id="countdown" class="text-lg mt-1"></div>
+  </div>
+</div>
+
+<!-- MODAL SURPRESA -->
+<div id="modalSurpresa" class="fixed inset-0 hidden items-center justify-center z-50" style="background:rgba(0,0,0,.85)">
+  <div class="relative w-full max-w-md mx-4 rounded-3xl p-4 text-white" style="background:linear-gradient(180deg,#47627d,#121212)">
+    <button id="fecharSurpresa" class="absolute top-3 right-5 text-3xl">✕</button>
+    <img src="/static/meubb.webp" id="cover" class="cover mb-3 paused">
+    <audio id="audioSurpresa">
+      <source src="/static/O%20Mundo%20%C3%89%20Nosso%20-%20MC%20Duduzinho.mp4" type="audio/mp4">
+    </audio>
+    <div class="w-full rounded-2xl p-3 bg-gradient-to-b from-[#3a536a] to-[#0e0e0e]">
+      <div class="marquee-container text-lg font-bold">
+        <span class="marquee-text">O Mundo É Nosso - MC Duduzinho</span>
+      </div>
+      <p class="text-sm opacity-80 mb-2">MC Duduzinho Oficial</p>
+      <input id="progress" type="range" min="0" value="0" step="1" class="w-full accent-white">
+      <div class="flex justify-between text-xs opacity-80 mt-1 mb-2">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+      <div class="flex items-center justify-between px-5">
+        <button>🔀</button>
+        <div class="flex items-center gap-4">
+          <button>⏮</button>
+          <button id="playBtn" class="w-12 h-12 flex items-center justify-center rounded-full bg-white text-black text-lg">▶</button>
+          <button>⏭</button>
+        </div>
+        <button>🔁</button>
+      </div>
+      <p class="typing-text" id="typingText"></p>
+    </div>
+    <div class="sobre-toggle" id="toggleSobre">💌 Sobre a gente</div>
+
+<div class="sobre-container" id="sobreBox" style="position:relative;">
+
+  <!-- VÍDEO DE FUNDO -->
+  <video autoplay muted loop playsinline style="
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+      filter:brightness(0.5);
+  ">
+    <source src="/static/meu_amor.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
+
+  <!-- CONTEÚDO SOBRE -->
+  <div class="sobre-content" style="position:relative; z-index:1;">
+
+    <h4>Sobre a gente</h4>
+    <p>
+      nossa história começou de um jeito inesperado, mas Você se tornou a melhor da minha vida,
+      cada momento ao seu lado se torna especial ❤️
+    </p>
+
+    <!-- ÁLBUM DE FOTOS -->
+    <div class="album fade-in" id="albumSobre">
+
+      <div class="photo-wrapper">
+        <img src="/static/foto1.jpg" data-caption="Nosso primeiro encontro ❤️">
+        <div class="caption"></div>
+      </div>
+
+      <div class="photo-wrapper">
+        <video
+          src="/static/momentos.mp4"
+          muted
+          loop
+          playsinline
+          style="
+            width:150px;
+            height:150px;
+            object-fit:cover;
+            border-radius:12px;
+            box-shadow:0 4px 12px rgba(0,0,0,.4);
+            cursor:pointer;
+          "
+          onmouseover="this.play()"
+          onmouseout="this.pause()"
+        ></video>
+        <div class="caption">Momentos inesquecíveis ✨</div>
+      </div>
+
+      <div class="photo-wrapper">
+        <img src="/static/foto3.jpg" data-caption="Sorrisos e abraços ❤️">
+        <div class="caption"></div>
+      </div>
+
+      <div class="photo-wrapper">
+        <img src="/static/foto4.jpg" data-caption="Te amo para sempre 💕">
+        <div class="caption"></div>
+      </div>
+    
+    </div>
+
+    <!-- 👇 TELINHA QUE ABRE A FOTO GRANDE -->
+<div id="previewSobre" style="
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+">
+  <img id="previewImg" style="
+    max-width:90%;
+    max-height:90%;
+    border-radius:12px;
+  ">
+</div>
+
+  ">
+    <img id="previewImg" style="
+      max-width:90%;
+      max-height:90%;
+      border-radius:12px;
+    ">
+  </div>
+  </div>
+</div>
+<script>
+// ===== CONTADORES =====
+const startDate=new Date(2025,4,13,18,18,0);
+setInterval(()=>{
+  let d=Date.now()-startDate;
+  anos_player.innerText=Math.floor(d/31536000000);
+  meses_player.innerText=Math.floor(d/2592000000)%12;
+  dias_player.innerText=Math.floor(d/86400000)%30;
+  horas_player.innerText=Math.floor(d/3600000)%24;
+  minutos_player.innerText=Math.floor(d/60000)%60;
+  segundos_player.innerText=Math.floor(d/1000)%60;
+},1000);
+
+const targetDate=new Date(2025,5,25,19,0,0);
+setInterval(()=>{
+  const t=targetDate-Date.now();
+  if(t>0){
+    const d=Math.floor(t/86400000);
+    const h=Math.floor((t%86400000)/3600000);
+    const m=Math.floor((t%3600000)/60000);
+    const s=Math.floor((t%60000)/1000);
+    document.getElementById("countdown").innerText=`${d}d ${h}h ${m}m ${s}s`;
+  } else {
+    document.getElementById("countdown").innerText="Chegou o dia! ❤️";
+  }
+},1000);
+
+// ===== ÁUDIO E MODAL =====
+const audio=document.getElementById("audioSurpresa");
+const playBtn=document.getElementById("playBtn");
+const progress=document.getElementById("progress");
+const currentTimeEl=document.getElementById("currentTime");
+const durationEl=document.getElementById("duration");
+const cover=document.getElementById("cover");
+const typingText=document.getElementById("typingText");
+const surpriseMessages=[
+  "Você é a pessoa mais especial da minha vida...",
+  "Cada momento ao seu lado é único e inesquecível...",
+  "Eu te amo mais do que palavras podem expressar! ❤️"
+];
+let messageIndex=0; let charIndex=0;
+function typeMessage(){
+  if(charIndex<surpriseMessages[messageIndex].length){
+    typingText.textContent += surpriseMessages[messageIndex][charIndex];
+    charIndex++;
+    setTimeout(typeMessage,60);
+  }
+}
+
+// ===== PLAY BUTTON =====
+playBtn.onclick=()=>{
+  if(audio.paused){ audio.play(); playBtn.innerText="⏸"; cover.classList.remove("paused"); } 
+  else{ audio.pause(); playBtn.innerText="▶"; cover.classList.add("paused"); }
+};
+audio.onloadedmetadata=()=>{ progress.max=Math.floor(audio.duration); durationEl.innerText=formatTime(audio.duration); };
+audio.ontimeupdate=()=>{ progress.value=Math.floor(audio.currentTime); currentTimeEl.innerText=formatTime(audio.currentTime); };
+progress.oninput=()=>audio.currentTime=progress.value;
+function formatTime(sec){ const m=Math.floor(sec/60); const s=Math.floor(sec%60).toString().padStart(2,"0"); return `${m}:${s}`; }
+
+// ===== ABRIR MODAL =====
+abrirSurpresa.onclick=()=>{
+  modalSurpresa.classList.remove("hidden");
+  modalSurpresa.classList.add("flex");
+  audio.play(); playBtn.innerText="⏸"; cover.classList.remove("paused");
+  typingText.textContent=""; messageIndex=0; charIndex=0; typeMessage();
+
+  // criar confetes e pétalas
+  for(let i=0;i<30;i++){ setTimeout(criarConfete,i*50); setTimeout(criarPetala,i*80); }
+
+  document.body.style.background=`hsl(${Math.random()*360},50%,15%)`;
+};
+
+// ===== FECHAR MODAL =====
+fecharSurpresa.onclick=()=>{
+  modalSurpresa.classList.add("hidden");
+  audio.pause(); audio.currentTime=0; playBtn.innerText="▶"; cover.classList.add("paused");
+};
+
+// ===== SOBRE TOGGLE COM FADE-IN PARA ÁLBUM =====
+const toggle=document.getElementById("toggleSobre");
+const box=document.getElementById("sobreBox");
+toggle.onclick = () => {
+  box.classList.toggle("open");
+  const album = document.getElementById("albumSobre");
+  if(box.classList.contains("open")){
+    album.classList.add("fade-in");
+  } else {
+    album.classList.remove("fade-in");
+  }
+};
+
+// ===== CORAÇÕES FLUTUANTES =====
+function criarCoração(){
+  const heart=document.createElement("div");
+  heart.className="floating-heart";
+  heart.style.left=Math.random()*window.innerWidth+"px";
+  heart.style.top=window.innerHeight+"px";
+  heart.style.animationDuration=(2 + Math.random()*3)+"s";
+  document.getElementById("hearts-container").appendChild(heart);
+  setTimeout(()=>heart.remove(),5000);
+}
+setInterval(criarCoração, 400);
+
+// ===== CONFETE E PETALAS =====
+function criarConfete(){
+  const confetti=document.createElement("div");
+  confetti.className="confetti";
+  confetti.style.left=Math.random()*window.innerWidth+"px";
+  confetti.style.background=`hsl(${Math.random()*360},100%,75%)`;
+  document.body.appendChild(confetti);
+  setTimeout(()=>confetti.remove(),3000);
+}
+function criarPetala(){
+  const petala=document.createElement("div");
+  petala.className="petala";
+  petala.style.left=Math.random()*window.innerWidth+"px";
+  petala.style.animationDuration=(3+Math.random()*3)+"s";
+  document.body.appendChild(petala);
+  setTimeout(()=>petala.remove(),6000);
+}
+
+// ===== LIGHTBOX =====
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
+document.querySelectorAll(".photo-wrapper img").forEach((img,index)=>{
+  img.style.setProperty('--rotation',`${Math.random()*6-3}deg`);
+  img.style.animationDelay=`${index*0.1}s`;
+  img.nextElementSibling.textContent=img.getAttribute('data-caption');
+  img.onclick=()=>{ lightboxImg.src=img.src; lightbox.style.display="flex"; };
+});
+lightbox.onclick=()=>lightbox.style.display="none";
+function atualizarHoras(){
+  const inicio = new Date("2025-05-13T18:18:00"); // MUDE A DATA
+  const agora = new Date();
+
+  const diff = agora - inicio;
+  const horas = Math.floor(diff / (1000 * 60 * 60));
+
+  let percentual = Math.min(99, Math.floor(horas / 200));
+
+  document.getElementById("horasJuntos").innerText =
+    horas + " horas juntos";
+
+  document.getElementById("comparacaoCasais").innerText =
+    "Mais tempo do que " + percentual + "% dos casais no mundo";
+}
+
+setInterval(atualizarHoras, 60000);
+atualizarHoras();
+
+/* ===== ABRIR FOTO DENTRO DO SOBRE ===== */
+const preview = document.getElementById("previewSobre");
+const previewImg = document.getElementById("previewImg");
+
+document.querySelectorAll("#albumSobre img").forEach(foto => {
+  foto.onclick = () => {
+    previewImg.src = foto.src;
+    preview.style.display = "flex";
+  };
+});
+
+preview.onclick = () => {
+  preview.style.display = "none";
+};
+
+</script>
+</body>
+</html>
